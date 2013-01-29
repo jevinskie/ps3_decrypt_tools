@@ -1,7 +1,7 @@
 Things you'll need
 
 *	BUILD-ESSENTIAL
-*	OPENSSL
+*	LIBSSL-DEV
 *	LIBPOLARSSL-DEV
 *	EID_ROOT_KEY
 *	eEID
