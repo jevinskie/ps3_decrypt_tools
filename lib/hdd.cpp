@@ -35,3 +35,27 @@ int decrypt_sectors(u8 *sectors, u64 sec_start, u32 size, u8 *k1, u8 *k2, int en
 
 	return 0;
 }
+
+/*! Encrypt sectors. */
+int encrypt_sectors(u8 *sectors, u64 sec_start, u32 size, u8 *k1, u8 *k2, int endian_swap_16)
+{
+	u32 i;
+	aes_xts_ctxt_t xts_ctxt;
+
+	//Check if size is a multiple of sector size.
+	if(!(size % SECTOR_SIZE == 0))
+		return -1;
+
+	//Init AES-XTS context.
+	aes_xts_init(&xts_ctxt, AES_ENCRYPT, k1, k2, 128);
+
+	//Encrypt sectors.
+	for(i = 0; i < size; i += SECTOR_SIZE)
+		aes_xts_crypt(&xts_ctxt, sec_start + i / SECTOR_SIZE, SECTOR_SIZE, sectors + i, sectors + i);
+
+	//Swap endianness if wanted.
+	if(endian_swap_16)
+		_es16_buffer(sectors, size);
+
+	return 0;
+}
