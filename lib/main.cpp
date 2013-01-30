@@ -3,9 +3,9 @@
 * This file is released under the GPLv2.
 */
 
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
 
 #include "util.h"
 #include "keys.h"
@@ -56,25 +56,28 @@ void decrypt_eid()
 
 int main()
 {
-    int i;
-    printf("Select an option\n1-Decrypt HDD\n2-Decrypt eEID(0,1,2,4 ONLY)\n3-Decrypt ALL\n0-Exit\n");
-    scanf("%d",&i);
-    switch(i)
-    {
-        case 1:
-            decrypt_hdd();
-            break;
-        case 2:
-            decrypt_eid();
-            break;
-        case 3:
-            decrypt_hdd();
-            decrypt_eid();
-        case 0:
-            break;
-        default:
-            printf("Incorrect Option Selected! Try Again.");
-            break;
-    }
-    return 0;
+    	int i=0;    	
+    	do
+	{	printf("Select an option\n1-Decrypt HDD\n2-Decrypt eEID(0,1,2,4 ONLY)\n3-Decrypt ALL\n0-Exit\n");
+		scanf("%d",&i);
+    		switch(i)
+    		{
+        		case 1:
+            			decrypt_hdd();
+            			break;
+        		case 2:
+            			decrypt_eid();
+            			break;
+        		case 3:
+            			decrypt_hdd();
+            			decrypt_eid();
+				break;
+        		case 0:
+				break;
+			default:
+            			printf("Incorrect Option Selected! Try Again.");
+            			break;
+    		}
+	}while(i!=0);
+	return 0;
 }
