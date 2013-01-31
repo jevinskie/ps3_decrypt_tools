@@ -233,7 +233,7 @@ void eid1_decrypt(s8 *file_in, s8 *file_out)
 	if(eid1 != NULL)
 	{
 		eid1_decrypt_buffer(eid1);
-		_write_buffer(file_out, eid1, EID4_SIZE);
+		_write_buffer(file_out, eid1, 0x290);
 		free(eid1);
 	}
 }
@@ -271,7 +271,7 @@ u8 *eid2_generate_block_buffer(u8 *eid2, u32 blocktype)
 	return res;
 }
 
-void eid2_generate_block(s8 *file_in, u32 blocktype, s8 *file_out)
+void eid2_generate_block(s8 *file_in, u32 blocktype, s8 *file_out, u32 size)
 {
 	u32 length;
 	u8 *eid2 = _read_buffer(file_in, &length);
@@ -281,7 +281,7 @@ void eid2_generate_block(s8 *file_in, u32 blocktype, s8 *file_out)
 		u8 *block = eid2_generate_block_buffer(eid2, blocktype);
 		if(block != NULL)
 		{
-			_write_buffer(file_out, block, EID4_SIZE);
+			_write_buffer(file_out, block, size);
 			free(block);
 		}
 

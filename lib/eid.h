@@ -172,8 +172,9 @@ u8 *eid2_generate_block_buffer(u8 *eid2, u32 blocktype);
 * \param file_in Input EID2.
 * \param blocktype Type of block to generate.
 * \param file_out Output file.
+* \param size Size of Output file
 */
-void eid2_generate_block(s8 *file_in, u32 blocktype, s8 *file_out);
+void eid2_generate_block(s8 *file_in, u32 blocktype, s8 *file_out, u32 size);
 
 /*!
 * \brief Decrypt EID2 block.

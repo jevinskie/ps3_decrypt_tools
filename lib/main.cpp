@@ -51,8 +51,8 @@ void decrypt_eid()
 
 	eid0_decrypt((s8*)"eid/eid0",(s8*)"eid/eid0decrypted");
 	eid1_decrypt((s8*)"eid/eid1",(s8*)"eid/eid1decrypted");
-	eid2_generate_block((s8*)"eid/eid2",EID2_BLOCKTYPE_P,(s8*)"eid/eid2pblock");
-	eid2_generate_block((s8*)"eid/eid2",EID2_BLOCKTYPE_S,(s8*)"eid/eid2sblock");
+	eid2_generate_block((s8*)"eid/eid2",EID2_BLOCKTYPE_P,(s8*)"eid/eid2pblock",0x80);
+	eid2_generate_block((s8*)"eid/eid2",EID2_BLOCKTYPE_S,(s8*)"eid/eid2sblock",0x690);
 	eid4_decrypt((s8*)"eid/eid4",(s8*)"eid/eid4decrypted");
 }
 
@@ -141,8 +141,8 @@ void decrypt_all()
 
 	eid0_decrypt((s8*)"eid/eid0",(s8*)"eid/eid0decrypted");
 	eid1_decrypt((s8*)"eid/eid1",(s8*)"eid/eid1decrypted");
-	eid2_generate_block((s8*)"eid/eid2",EID2_BLOCKTYPE_P,(s8*)"eid/eid2pblock");
-	eid2_generate_block((s8*)"eid/eid2",EID2_BLOCKTYPE_S,(s8*)"eid/eid2sblock");
+	eid2_generate_block((s8*)"eid/eid2",EID2_BLOCKTYPE_P,(s8*)"eid/eid2pblock",0x80);
+	eid2_generate_block((s8*)"eid/eid2",EID2_BLOCKTYPE_S,(s8*)"eid/eid2sblock",0x690);
 	eid4_decrypt((s8*)"eid/eid4",(s8*)"eid/eid4decrypted");
 }
 
