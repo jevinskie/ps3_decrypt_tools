@@ -180,8 +180,9 @@ void eid2_generate_block(s8 *file_in, u32 blocktype, s8 *file_out, u32 size);
 * \brief Decrypt EID2 block.
 * \block EID2 block.
 * \length Block length.
+* \out Output File
 */
-void eid2_decrypt_block(u8 *block, u32 length);
+void eid2_decrypt_block(s8 *block, u32 length, s8* out);
 
 /*!
 * \brief Decrypt EID3 buffer.

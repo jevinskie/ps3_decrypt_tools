@@ -289,8 +289,9 @@ void eid2_generate_block(s8 *file_in, u32 blocktype, s8 *file_out, u32 size)
 	}
 }
 
-void eid2_decrypt_block(u8 *block, u32 length)
+void eid2_decrypt_block(s8 *block, u32 length, s8* out)
 {
+	u8 *block_read = _read_buffer(block, NULL);
 	u8 tmp[0x08], iv[0x08];
 	int block_size = 8;
 	int num_blocks = (int)(length / block_size);
@@ -304,7 +305,7 @@ void eid2_decrypt_block(u8 *block, u32 length)
 		des_setkey_dec(&ctx, eid2_des_key);
 		for(i = 0; i < num_blocks - 1; ++i)
 		{
-			u8 *ptr = block + i * block_size;
+			u8 *ptr = block_read + i * block_size;
 			memcpy(tmp, ptr, block_size);
 			des_crypt_ecb(&ctx, ptr, ptr);
 			if(i > 0)
@@ -315,6 +316,7 @@ void eid2_decrypt_block(u8 *block, u32 length)
 			memcpy(iv, tmp, block_size);
 		}
 	}
+	_write_buffer(out,tmp,length);
 }
 
 void eid3_decrypt_buffer(u8 *eid3)
