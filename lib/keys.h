@@ -44,6 +44,9 @@ extern u8 *iso_root_key;
 /*! Isolation root iv. */
 extern u8 *iso_root_iv;
 
+/*! Syscon key seed. */
+extern u8 syscon_key_seed[INDIV_SIZE];
+
 /*! Common individuals seed. */
 extern u8 common_indiv_seed[INDIV_SEED_SIZE];
 /*! EID0 individuals seed. */

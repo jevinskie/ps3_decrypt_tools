@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <polarssl/aes.h>
 
 #include "util.h"
 #include "keys.h"
@@ -13,6 +14,7 @@
 #include "hdd.h"
 #include "kgen.h"
 #include "types.h"
+#include "indiv.h"
 
 void decrypt_hdd()
 {
@@ -83,10 +85,35 @@ void decrypt_eid()
 	eid4_decrypt((s8*)"eid/eid4",(s8*)"eid/eid4decrypted");
 }
 
+void syscon_auth()
+{
+	_write_buffer((s8*)"syscon/syscon_key_seed", syscon_key_seed, INDIV_SIZE);
+	aes_context aes_ctxt;
+	u8 indiv[0x40];
+	u8 indiv_key[0x20];
+	u8 zero_iv[0x10]={0x0};
+	u8 enc_key_seed[INDIV_SIZE];
+
+	_write_buffer((s8*)"syscon/syscon_indiv_seed", eid1_indiv_seed, 0x40);
+	//Generate individuals.
+	indiv_gen(eid1_indiv_seed, NULL, NULL, NULL, indiv);
+	_write_buffer((s8*)"syscon/indiv", indiv, 0x40);
+	
+	
+	//Generate seeds
+	memcpy(indiv_key,indiv + 0x20,0x20);
+	aes_setkey_enc(&aes_ctxt, indiv_key, KEY_BITS(0x20));
+	aes_crypt_cbc(&aes_ctxt, AES_ENCRYPT, INDIV_SIZE, zero_iv, syscon_key_seed, enc_key_seed);
+	              	
+
+	_write_buffer((s8*)"syscon/enc_key_seed", enc_key_seed, INDIV_SIZE);
+
+}
+
 int main()
 {
     int i;
-    printf("Select an option\n1-Decrypt HDD\n2-Decrypt eEID(0,1,2,4 ONLY)\n3-Decrypt ALL\n4-Encrypt HDD\n0-Exit\n");
+    printf("Select an option\n1-Decrypt HDD\n2-Decrypt eEID(0,1,2,4 ONLY)\n3-Decrypt ALL\n4-Encrypt HDD\n5-Generate Syscon AUTH seeds(WARNING! DANGEROUS!)\n0-Exit\n");
     scanf("%d",&i);
     switch(i)
     {
@@ -101,6 +128,9 @@ int main()
             decrypt_eid();
         case 4:
 	    encrypt_hdd();
+	    break;
+	case 5:
+	    syscon_auth();
 	    break;
 	case 0:
             break;
