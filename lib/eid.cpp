@@ -12,9 +12,9 @@
 #include "eid.h"
 #include "keys.h"
 #include "indiv.h"
-#include <polarssl/des.h>
-#include <polarssl/aes.h>
-#include <polarssl/sha1.h>
+#include "des.h"
+#include "aes.h"
+#include "sha1.h"
 #include "aes_omac.h"
 
 void eid_unpack(s8 *file)

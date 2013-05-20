@@ -4,7 +4,7 @@
 */
 
 #include "keys.h"
-#include <polarssl/aes.h>
+#include "aes.h"
 
 void indiv_gen(u8 *seed0, u8 *seed1, u8 *seed2, u8 *seed3, u8 *indiv)
 {

@@ -6,8 +6,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <polarssl/aes.h>
 
+#include "aes.h"
 #include "util.h"
 #include "keys.h"
 #include "eid.h"

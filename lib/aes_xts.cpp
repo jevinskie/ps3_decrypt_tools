@@ -4,7 +4,7 @@
 */
 
 #include "types.h"
-#include <polarssl/aes.h>
+#include "aes.h"
 #include "aes_xts.h"
 
 int aes_xts_init(aes_xts_ctxt_t *ctxt, int mode, const u8 *data_key, const u8 *tweak_key, int keybits)
