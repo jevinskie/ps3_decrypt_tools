@@ -1,6 +1,0 @@
-put your eid_root_key, split it into key and iv, and put your hdd image like this:
-
-data/eid_root_key
-data/key
-data/iv
-data/sectors

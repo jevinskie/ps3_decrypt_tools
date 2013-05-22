@@ -1,21 +1,21 @@
 Things you'll need
 
-*	BUILD-ESSENTIAL
-*	EID_ROOT_KEY
-*	eEID
-*	SECTORS(HDD IMAGE)
+*	make and gcc (from cygwin and/or linux) 
+*	eid_root_key (root key, obtained from flatz's dumper)
+*	eid 		 (eEID, renamed to eid, no extension)
+*	sectors		 (hdd image, starting from sector 0, no extension)
+* 	to place eid_root_key and sectors on data
+*	to place eid on eid
+* 	to leave the syscon folder as is
 
-How to (EID)
+How to (EID/HDD/SYSCON)
 
-1. Get your eid_root_key and split it into two parts, the erk (key) and riv (iv) and put them under data
-2. Get your eEID, rename it to eid(no extension) and put it into eid folder
-3. Make
-4. Run main
+1. Compile the program
+2. Run the apropriate option 
+by selecting the correspondent number
 
-How to (HDD)
+for HDD:
 
-1. Get a binary image from the ps3 hdd. you can use HxD, but linux is preferable
-2. Get your eid_root_key
-3. Place them both under the data folder
-4. Make
-5. Run main
+if you DO NOT have VFLASH then please 
+comment out the code under line 39 and 79 (decrypt or encrypt)
+and compile the program again
