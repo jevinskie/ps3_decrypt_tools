@@ -93,7 +93,7 @@ void eid0_decrypt_section_0(u8 *eid0_in, u8 *section_out)
 
 	//Generate key.
 	aes_setkey_enc(&aes_ctxt, indiv + INDIV_EID0_SEC_0_GENKEY_OFFSET, 0x100);
-	aes_crypt_ecb(&aes_ctxt, AES_ENCRYPT, eid0_keyseed_1, key);
+	aes_crypt_ecb(&aes_ctxt, AES_ENCRYPT, eid0_keyseed_0, key);
 
 	//Decrypt section 0 of eid0.
 	aes_setkey_dec(&aes_ctxt, key, 0x80);
@@ -107,6 +107,31 @@ void eid0_decrypt_section_0(u8 *eid0_in, u8 *section_out)
 		printf("warning: eid0 section 0 hash check failed!\n");
 }
 
+void eid0_decrypt_section_6(u8 *eid0_in, u8 *section_out)
+{
+	u8 indiv[INDIV_SIZE];
+	u8 key[0x10];
+	aes_context aes_ctxt;
+
+	//Generate individuals.
+	indiv_gen(eid0_indiv_seed, NULL, NULL, NULL, indiv);
+
+	//Generate key.
+	aes_setkey_enc(&aes_ctxt, indiv + INDIV_EID0_SEC_0_GENKEY_OFFSET, 0x100);
+	aes_crypt_ecb(&aes_ctxt, AES_ENCRYPT, eid0_keyseed_6, key);
+
+	//Decrypt section 6 of eid0.
+	aes_setkey_dec(&aes_ctxt, key, 0x80);
+	aes_crypt_cbc(&aes_ctxt, AES_DECRYPT, 0xC0, indiv + INDIV_EID0_SEC_A_IV_OFFSET, eid0_in + 0x20 + 0xC0*0x6, section_out);
+
+	//Calculate aes omac1.
+	u8 digest[AES_OMAC1_DIGEST_SIZE];
+	aes_omac1(digest, section_out, 0xA8, key, 0x80);
+
+	if(memcmp(digest, section_out + 0xA8, AES_OMAC1_DIGEST_SIZE) != 0)
+		printf("warning: eid0 section 6 hash check failed!\n");
+}
+
 void eid0_decrypt_section_A(u8 *eid0_in, u8 *section_out)
 {
 	u8 indiv[INDIV_SIZE];
@@ -118,7 +143,7 @@ void eid0_decrypt_section_A(u8 *eid0_in, u8 *section_out)
 
 	//Generate key.
 	aes_setkey_enc(&aes_ctxt, indiv + INDIV_EID0_SEC_A_GENKEY_OFFSET, 0x100);
-	aes_crypt_ecb(&aes_ctxt, AES_ENCRYPT, eid0_keyseed_4, key);
+	aes_crypt_ecb(&aes_ctxt, AES_ENCRYPT, eid0_keyseed_A, key);
 
 	//Decrypt section A of eid0.
 	aes_setkey_dec(&aes_ctxt, key, 0x80);
@@ -143,7 +168,7 @@ void eid0_hash_encrypt_section_0(u8 *section_in, u8 *section_out)
 
 	//Generate key.
 	aes_setkey_enc(&aes_ctxt, indiv + INDIV_EID0_SEC_0_GENKEY_OFFSET, 0x100);
-	aes_crypt_ecb(&aes_ctxt, AES_ENCRYPT, eid0_keyseed_1, key);
+	aes_crypt_ecb(&aes_ctxt, AES_ENCRYPT, eid0_keyseed_0, key);
 
 	//Calculate aes omac1.
 	aes_omac1(section_in + 0xA8, section_in, 0xA8, key, 0x80);
@@ -162,10 +187,24 @@ void eid0_decrypt(s8 *file_in, s8 *file_out)
 	{
 		u8 section_0[EID0_SECTION_0_SIZE];
 		eid0_decrypt_section_0(eid0, section_0);
-
-		s8 fname[128];
-		sprintf(fname, "%s.section_0", file_out);
-		_write_buffer(fname, section_0, 0xC0);
+		
+		u8 section_6[EID0_SECTION_0_SIZE];
+		eid0_decrypt_section_6(eid0, section_6);
+		
+		u8 section_A[EID0_SECTION_0_SIZE];
+		eid0_decrypt_section_A(eid0, section_A);
+        
+		s8 fname_0[128];
+		sprintf(fname_0, "%s.section_0", file_out);
+		_write_buffer(fname_0, section_0, 0xC0);
+		
+		s8 fname_6[128];
+		sprintf(fname_6, "%s.section_6", file_out);
+		_write_buffer(fname_6, section_6, 0xC0);
+		
+		s8 fname_A[128];
+		sprintf(fname_A, "%s.section_A", file_out);
+		_write_buffer(fname_A, section_A, 0xC0);
 
 		free(eid0);
 	}
