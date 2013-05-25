@@ -21,6 +21,9 @@ void decrypt_hdd()
     u8 ata_k1[0x20], ata_k2[0x20], edec_k1[0x20], edec_k2[0x20];
 	u32 size;
 
+	//fetching root_key
+	eid_root_key = _read_buffer((s8*)"data/eid_root_key", NULL);
+	
 	//Assuming sectors start with sector 0.
 	u8 *sectors = _read_buffer((s8*)"data/sectors", &size);
 
@@ -44,8 +47,13 @@ void decrypt_hdd()
 
 void decrypt_eid()
 {	
+	//fetching root_key
+	eid_root_key = _read_buffer((s8*)"data/eid_root_key", NULL);
+	
+	//unpacking eid
 	eid_unpack((s8*)"eid/eid");
 
+	//decrypting
 	eid0_decrypt((s8*)"eid/eid0",(s8*)"eid/eid0decrypted");
 	eid1_decrypt((s8*)"eid/eid1",(s8*)"eid/eid1decrypted");
 	eid2_generate_block((s8*)"eid/eid2",EID2_BLOCKTYPE_P,(s8*)"eid/eid2pblock",0x80);
@@ -59,6 +67,9 @@ void encrypt_hdd()
 {
     u8 ata_k1[0x20], ata_k2[0x20], edec_k1[0x20], edec_k2[0x20];
 	u32 size;
+	
+	//fetching root_key
+	eid_root_key = _read_buffer((s8*)"data/eid_root_key", NULL);
 
 	//Assuming sectors start with sector 0.
 	u8 *sectors = _read_buffer((s8*)"data/sectors_decrypted", &size);
@@ -89,6 +100,9 @@ void syscon_auth()
 	u8 indiv_key[0x20];
 	u8 zero_iv[0x10]={0};
 	u8 enc_key_seed[INDIV_SIZE];
+	
+	//fetching root_key
+	eid_root_key = _read_buffer((s8*)"data/eid_root_key", NULL);
 
 	//Generate individuals.
 	indiv_gen(eid1_indiv_seed, NULL, NULL, NULL, indiv);

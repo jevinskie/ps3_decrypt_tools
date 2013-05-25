@@ -7,7 +7,7 @@
 #include "keys.h"
 #include "util.h"
 
-u8 *eid_root_key = _read_buffer((s8*)"data/eid_root_key", NULL);
+u8 *eid_root_key = {0};
 
 u8 syscon_key_seed[INDIV_SIZE] =
 {
