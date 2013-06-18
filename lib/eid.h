@@ -27,7 +27,7 @@
 /*! EID header */
 typedef struct _eid_header
 {
-	/*! Entry count. */
+  /*! Entry count. */
 	u32 entcnt;
 	/*! EID size. */
 	u32 size;
@@ -135,11 +135,25 @@ void eid0_decrypt_section_A(u8 *eid0_in, u8 *section_out);
 void eid0_hash_encrypt_section_0(u8 *section_in, u8 *section_out);
 
 /*!
+* \brief Hash and encrypt section 0 of EID0.
+* \param section_in Input section.
+* \param section_out Output section.
+*/
+void eid0_hash_encrypt_section_A(u8 *section_in, u8 *section_out);
+
+/*!
 * \brief Decrypt EID0.
 * \param file_in Input EID0.
 * \param file_out Prefix for decrypted EID0 sections.
 */
 void eid0_decrypt(s8 *file_in, s8 *file_out);
+
+/*!
+* \brief Decrypt EID0.
+* \param file_in Input EID0.
+* \param file_out Prefix for decrypted EID0 sections.
+*/
+void eid0_encrypt_section_A(s8 *file_in, s8 *file_out);
 
 /*!
 * \brief List infos on EID0.

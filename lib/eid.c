@@ -3,6 +3,7 @@
 * This file is released under the GPLv2.
 */
 
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <malloc.h>
@@ -19,7 +20,7 @@
 
 void eid_unpack(s8 *file)
 {
-	u32 i, length;
+  u32 i, length;
 	u8 *eid = _read_buffer(file, &length);
 
 	if(eid != NULL)
@@ -178,6 +179,27 @@ void eid0_hash_encrypt_section_0(u8 *section_in, u8 *section_out)
 	aes_crypt_cbc(&aes_ctxt, AES_ENCRYPT, 0xC0, indiv + INDIV_EID0_SEC_0_IV_OFFSET, section_in, section_out);
 }
 
+void eid0_hash_encrypt_section_A(u8 *section_in, u8 *section_out)
+{
+	u8 indiv[INDIV_SIZE];
+	u8 key[0x10];
+	aes_context aes_ctxt;
+
+	//Generate individuals.
+	indiv_gen(eid0_indiv_seed, NULL, NULL, NULL, indiv);
+
+	//Generate key.
+	aes_setkey_enc(&aes_ctxt, indiv + INDIV_EID0_SEC_A_GENKEY_OFFSET, 0x100);
+	aes_crypt_ecb(&aes_ctxt, AES_ENCRYPT, eid0_keyseed_A, key);
+
+	//Calculate aes omac1.
+	aes_omac1(section_in + 0xA8, section_in, 0xA8, key, 0x80);
+
+	//Encrypt section A of eid0.
+	aes_setkey_enc(&aes_ctxt, key, 0x80);
+	aes_crypt_cbc(&aes_ctxt, AES_ENCRYPT, 0xC0, indiv + INDIV_EID0_SEC_A_IV_OFFSET, section_in, section_out);
+}
+
 void eid0_decrypt(s8 *file_in, s8 *file_out)
 {
 	u32 length;
@@ -209,6 +231,28 @@ void eid0_decrypt(s8 *file_in, s8 *file_out)
 		free(eid0);
 	}
 }
+
+void eid0_encrypt_section_A(s8 *file_in, s8 *file_out)
+{
+	s8 fname_A_in[128];
+	sprintf(fname_A_in, "%s.section_A", file_in);
+
+	u32 length;
+	u8 *section_A_decrypted = _read_buffer(fname_A_in, &length);
+
+	if(section_A_decrypted != NULL)
+	{
+		u8 section_A[EID0_SECTION_A_SIZE];
+		eid0_hash_encrypt_section_A(section_A_decrypted, section_A);
+        
+		s8 fname_A[128];
+		sprintf(fname_A, "%s.section_A", file_out);
+		_write_buffer(fname_A, section_A, 0xC0);
+
+		free(section_A_decrypted);
+	}
+}
+
 
 void eid0_list_infos(s8 *file_in)
 {
