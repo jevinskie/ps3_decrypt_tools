@@ -420,8 +420,7 @@ void eid3_decrypt_buffer(u8 *eid3)
 	u8 digest[AES_OMAC1_DIGEST_SIZE];
 	aes_omac1(digest, eid3, 0xF0, key, 0x80);
 
-    _hexdump(stdout,"",0,digest,AES_OMAC1_DIGEST_SIZE,0);
-    _hexdump(stdout,"",0,(u8*)eid3 + 0xF0,AES_OMAC1_DIGEST_SIZE,0);
+    
 
 	if(memcmp(digest, eid3 + 0xF0, AES_OMAC1_DIGEST_SIZE) != 0)
 		printf("warning: eid3 omac1 hash check failed!\n");
@@ -440,8 +439,7 @@ void eid3_decrypt_buffer(u8 *eid3)
 	u8 sha1_digest[20];
 	sha1(eid3 + 0x20, 0xB8, sha1_digest);
 
-    _hexdump(stdout,"",0,sha1_digest,20,0);
-    _hexdump(stdout,"",0,(u8*)eid3 + 0x20 + 0xB8,20,0);
+    
 
 	if(memcmp(sha1_digest, eid3 + 0x20 + 0xB8, 20) != 0)
 		printf("warning: eid3 sha1 hash check failed!\n");

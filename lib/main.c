@@ -68,6 +68,7 @@ void decrypt_eid()
 	eid2_generate_block((s8*)"eid/eid2",EID2_BLOCKTYPE_S,(s8*)"eid/eid2sblock",0x690);
 	eid2_decrypt_block((s8*)"eid/eid2pblock",0x80,(s8*)"eid/eid2pblockdec");
 	eid2_decrypt_block((s8*)"eid/eid2sblock",0x690,(s8*)"eid/eid2sblockdec");
+	eid3_decrypt((s8*)"eid/eid3",(s8*)"eid/eid3decrypted");
 	eid4_decrypt((s8*)"eid/eid4",(s8*)"eid/eid4decrypted");
 }
 
