@@ -135,7 +135,7 @@ void syscon_auth()
 int main()
 {
     int i;
-    printf("Select an option\n1-Decrypt HDD\n2-Encrypt HDD\n3-Decrypt eEID(0,1,2,4 ONLY)\n4-Decrypt ALL\n5-Generate Syscon AUTH seeds(Acording to wiki)\n6-Encrypt EID0 Section A\n0-Exit\n");
+    printf("Select an option\n1-Decrypt HDD\n2-Encrypt HDD\n3-Decrypt eEID(missing eid5)\n4-Decrypt ALL\n5-Generate Syscon AUTH seeds(Acording to wiki)\n6-Encrypt EID0 Section A\n0-Exit\n");
     scanf("%d",&i);
     switch(i)
     {
