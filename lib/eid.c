@@ -217,15 +217,15 @@ void eid0_decrypt(s8 *file_in, s8 *file_out)
 		eid0_decrypt_section_A(eid0, section_A);
         
 		s8 fname_0[128];
-		sprintf(fname_0, "%s.section_0", file_out);
+		sprintf(fname_0, "%s.section_0.bin", file_out);
 		_write_buffer(fname_0, section_0, 0xC0);
 		
 		s8 fname_6[128];
-		sprintf(fname_6, "%s.section_6", file_out);
+		sprintf(fname_6, "%s.section_6.bin", file_out);
 		_write_buffer(fname_6, section_6, 0xC0);
 		
 		s8 fname_A[128];
-		sprintf(fname_A, "%s.section_A", file_out);
+		sprintf(fname_A, "%s.section_A.bin", file_out);
 		_write_buffer(fname_A, section_A, 0xC0);
 
 		free(eid0);
