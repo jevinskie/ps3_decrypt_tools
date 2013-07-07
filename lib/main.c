@@ -85,7 +85,7 @@ void syscon_auth()
 int main()
 {
     int i;
-    printf("Select an option\n1-Decrypt eEID(missing eid5)\n2-Encrypt EID0 Section A\n3-Generate Syscon AUTH seeds(Acording to wiki)\n4-Generate HDD Keys(Slim)\n0-Exit\n");
+    printf("Select an option\n1-Decrypt eEID(missing eid5)\n2-Encrypt EID0 Section A\n3-Generate Syscon AUTH seeds(Acording to wiki)\n4-Generate HDD Keys\n0-Exit\n");
     scanf("%d",&i);
     switch(i)
     {
