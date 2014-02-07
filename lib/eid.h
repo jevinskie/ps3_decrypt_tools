@@ -117,15 +117,9 @@ u8 *eid_get_entry(s8 *file, u64 entnum);
 * \brief Decrypt section 0 of EID0.
 * \param eid0_in Input EID0.
 * \param section_out Output section.
+* \param i Section number.
 */
-void eid0_decrypt_section_0(u8 *eid0_in, u8 *section_out);
-
-/*!
-* \brief Decrypt section A of EID0.
-* \param eid0_in Input EID0.
-* \param section_out Output section.
-*/
-void eid0_decrypt_section_A(u8 *eid0_in, u8 *section_out);
+void eid0_decrypt_section(u8 *eid0_in, u8 *section_out, int i);
 
 /*!
 * \brief Hash and encrypt section 0 of EID0.
@@ -186,17 +180,15 @@ u8 *eid2_generate_block_buffer(u8 *eid2, u32 blocktype);
 * \param file_in Input EID2.
 * \param blocktype Type of block to generate.
 * \param file_out Output file.
-* \param size Size of Output file
 */
-void eid2_generate_block(s8 *file_in, u32 blocktype, s8 *file_out, u32 size);
+void eid2_generate_block(s8 *file_in, u32 blocktype, s8 *file_out);
 
 /*!
 * \brief Decrypt EID2 block.
 * \block EID2 block.
 * \length Block length.
-* \out Output File
 */
-void eid2_decrypt_block(s8 *block, u32 length, s8* out);
+void eid2_decrypt_block(u8 *block, u32 length);
 
 /*!
 * \brief Decrypt EID3 buffer.

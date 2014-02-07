@@ -43,10 +43,16 @@ void decrypt_eid()
 	//decrypting
 	eid0_decrypt((s8*)"eid/eid0",(s8*)"eid/eid0decrypted");
 	eid1_decrypt((s8*)"eid/eid1",(s8*)"eid/eid1decrypted.bin");
-	eid2_generate_block((s8*)"eid/eid2",EID2_BLOCKTYPE_P,(s8*)"eid/eid2pblock.bin",0x80);
-	eid2_generate_block((s8*)"eid/eid2",EID2_BLOCKTYPE_S,(s8*)"eid/eid2sblock.bin",0x690);
-	eid2_decrypt_block((s8*)"eid/eid2pblock.bin",0x80,(s8*)"eid/eid2pblockdec.bin");
-	eid2_decrypt_block((s8*)"eid/eid2sblock.bin",0x690,(s8*)"eid/eid2sblockdec.bin");
+	eid2_generate_block((s8*)"eid/eid2",EID2_BLOCKTYPE_P,(s8*)"eid/eid2pblock.bin");
+	eid2_generate_block((s8*)"eid/eid2",EID2_BLOCKTYPE_S,(s8*)"eid/eid2sblock.bin");
+	u8* pblock = _read_buffer("eid/eid2pblock.bin",NULL);
+        eid2_decrypt_block(pblock,0x80);
+        memcpy(pblock,pblock+0x10,0x60);
+        _write_buffer((s8*)"eid/pblockdec.bin",pblock,0x60);
+        u8* sblock = _read_buffer("eid/eid2sblock.bin",NULL);
+        eid2_decrypt_block(sblock,0x690);
+        memcpy(sblock,sblock+0x10,0x670);
+        _write_buffer((s8*)"eid/sblockdec.bin",sblock,0x670);
 	eid3_decrypt((s8*)"eid/eid3",(s8*)"eid/eid3decrypted.bin");
 	eid4_decrypt((s8*)"eid/eid4",(s8*)"eid/eid4decrypted.bin");
 }

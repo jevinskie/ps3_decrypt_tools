@@ -1,0 +1,1 @@
+gcc -Wall lib/aes.c lib/sha1.c lib/des.c lib/aes_omac.c lib/keys.c lib/kgen.c lib/aes_xts.c lib/util.c lib/indiv.c lib/eid.c lib/main.c  -o decrypt_tools
