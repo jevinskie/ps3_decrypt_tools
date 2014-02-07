@@ -1,7 +1,7 @@
 /*
-* Copyright (c) 2011-2012 by ps3dev.net
-* This file is released under the GPLv2.
-*/
+ * Copyright (c) 2011-2012 by ps3dev.net
+ * This file is released under the GPLv2.
+ */
 
 #ifndef _TYPES_H_
 #define _TYPES_H_

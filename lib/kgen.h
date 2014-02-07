@@ -1,7 +1,7 @@
 /*
-* Copyright (c) 2012 by naehrwert
-* This file is released under the GPLv2.
-*/
+ * Copyright (c) 2012 by naehrwert
+ * This file is released under the GPLv2.
+ */
 
 #ifndef _KGEN_H_
 #define _KGEN_H_

@@ -1,7 +1,7 @@
 /*
-* Copyright (c) 2012 by naehrwert
-* This file is released under the GPLv2.
-*/
+ * Copyright (c) 2012 by naehrwert
+ * This file is released under the GPLv2.
+ */
 
 #ifndef _AES_XTS_H_
 #define _AES_XTS_H_
@@ -11,12 +11,11 @@
 #include "aes.h"
 
 /*! AES-XTS context. */
-typedef struct _aes_xts_ctxt
-{
-	aes_context twk_ctxt;
-	aes_context aes_ctxt;
-	int mode;
-	int keybits;
+typedef struct _aes_xts_ctxt {
+    aes_context twk_ctxt;
+    aes_context aes_ctxt;
+    int mode;
+    int keybits;
 } aes_xts_ctxt_t;
 
 /*! Initialize AES-XTS context. */

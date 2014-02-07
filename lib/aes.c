@@ -57,8 +57,7 @@
 /*
  * Forward S-box
  */
-static const unsigned char FSb[256] =
-{
+static const unsigned char FSb[256] ={
     0x63, 0x7C, 0x77, 0x7B, 0xF2, 0x6B, 0x6F, 0xC5,
     0x30, 0x01, 0x67, 0x2B, 0xFE, 0xD7, 0xAB, 0x76,
     0xCA, 0x82, 0xC9, 0x7D, 0xFA, 0x59, 0x47, 0xF0,
@@ -164,19 +163,19 @@ static const unsigned char FSb[256] =
     V(CB,B0,B0,7B), V(FC,54,54,A8), V(D6,BB,BB,6D), V(3A,16,16,2C)
 
 #define V(a,b,c,d) 0x##a##b##c##d
-static const unsigned long FT0[256] = { FT };
+static const unsigned long FT0[256] = {FT};
 #undef V
 
 #define V(a,b,c,d) 0x##b##c##d##a
-static const unsigned long FT1[256] = { FT };
+static const unsigned long FT1[256] = {FT};
 #undef V
 
 #define V(a,b,c,d) 0x##c##d##a##b
-static const unsigned long FT2[256] = { FT };
+static const unsigned long FT2[256] = {FT};
 #undef V
 
 #define V(a,b,c,d) 0x##d##a##b##c
-static const unsigned long FT3[256] = { FT };
+static const unsigned long FT3[256] = {FT};
 #undef V
 
 #undef FT
@@ -184,8 +183,7 @@ static const unsigned long FT3[256] = { FT };
 /*
  * Reverse S-box
  */
-static const unsigned char RSb[256] =
-{
+static const unsigned char RSb[256] ={
     0x52, 0x09, 0x6A, 0xD5, 0x30, 0x36, 0xA5, 0x38,
     0xBF, 0x40, 0xA3, 0x9E, 0x81, 0xF3, 0xD7, 0xFB,
     0x7C, 0xE3, 0x39, 0x82, 0x9B, 0x2F, 0xFF, 0x87,
@@ -291,19 +289,19 @@ static const unsigned char RSb[256] =
     V(61,84,CB,7B), V(70,B6,32,D5), V(74,5C,6C,48), V(42,57,B8,D0)
 
 #define V(a,b,c,d) 0x##a##b##c##d
-static const unsigned long RT0[256] = { RT };
+static const unsigned long RT0[256] = {RT};
 #undef V
 
 #define V(a,b,c,d) 0x##b##c##d##a
-static const unsigned long RT1[256] = { RT };
+static const unsigned long RT1[256] = {RT};
 #undef V
 
 #define V(a,b,c,d) 0x##c##d##a##b
-static const unsigned long RT2[256] = { RT };
+static const unsigned long RT2[256] = {RT};
 #undef V
 
 #define V(a,b,c,d) 0x##d##a##b##c
-static const unsigned long RT3[256] = { RT };
+static const unsigned long RT3[256] = {RT};
 #undef V
 
 #undef RT
@@ -311,8 +309,7 @@ static const unsigned long RT3[256] = { RT };
 /*
  * Round constants
  */
-static const unsigned long RCON[10] =
-{
+static const unsigned long RCON[10] ={
     0x00000001, 0x00000002, 0x00000004, 0x00000008,
     0x00000010, 0x00000020, 0x00000040, 0x00000080,
     0x0000001B, 0x00000036
@@ -321,57 +318,54 @@ static const unsigned long RCON[10] =
 /*
  * AES key schedule (encryption)
  */
-int aes_setkey_enc( aes_context *ctx, const unsigned char *key, unsigned int keysize )
-{
+int aes_setkey_enc(aes_context *ctx, const unsigned char *key, unsigned int keysize) {
     unsigned int i;
     unsigned long *RK;
 
-    switch( keysize )
-    {
-        case 128: ctx->nr = 10; break;
-        case 192: ctx->nr = 12; break;
-        case 256: ctx->nr = 14; break;
-        default : return( POLARSSL_ERR_AES_INVALID_KEY_LENGTH );
+    switch (keysize) {
+        case 128: ctx->nr = 10;
+            break;
+        case 192: ctx->nr = 12;
+            break;
+        case 256: ctx->nr = 14;
+            break;
+        default: return ( POLARSSL_ERR_AES_INVALID_KEY_LENGTH);
     }
 
     ctx->rk = RK = ctx->buf;
 
-    for( i = 0; i < (keysize >> 5); i++ )
-    {
-        GET_ULONG_LE( RK[i], key, i << 2 );
+    for (i = 0; i < (keysize >> 5); i++) {
+        GET_ULONG_LE(RK[i], key, i << 2);
     }
 
-    switch( ctx->nr )
-    {
+    switch (ctx->nr) {
         case 10:
 
-            for( i = 0; i < 10; i++, RK += 4 )
-            {
-                RK[4]  = RK[0] ^ RCON[i] ^
-                ( (unsigned long) FSb[ ( RK[3] >>  8 ) & 0xFF ]       ) ^
-                ( (unsigned long) FSb[ ( RK[3] >> 16 ) & 0xFF ] <<  8 ) ^
-                ( (unsigned long) FSb[ ( RK[3] >> 24 ) & 0xFF ] << 16 ) ^
-                ( (unsigned long) FSb[ ( RK[3]       ) & 0xFF ] << 24 );
+            for (i = 0; i < 10; i++, RK += 4) {
+                RK[4] = RK[0] ^ RCON[i] ^
+                        ((unsigned long) FSb[ (RK[3] >> 8) & 0xFF ]) ^
+                        ((unsigned long) FSb[ (RK[3] >> 16) & 0xFF ] << 8) ^
+                        ((unsigned long) FSb[ (RK[3] >> 24) & 0xFF ] << 16) ^
+                        ((unsigned long) FSb[ (RK[3]) & 0xFF ] << 24);
 
-                RK[5]  = RK[1] ^ RK[4];
-                RK[6]  = RK[2] ^ RK[5];
-                RK[7]  = RK[3] ^ RK[6];
+                RK[5] = RK[1] ^ RK[4];
+                RK[6] = RK[2] ^ RK[5];
+                RK[7] = RK[3] ^ RK[6];
             }
             break;
 
         case 12:
 
-            for( i = 0; i < 8; i++, RK += 6 )
-            {
-                RK[6]  = RK[0] ^ RCON[i] ^
-                ( (unsigned long) FSb[ ( RK[5] >>  8 ) & 0xFF ]       ) ^
-                ( (unsigned long) FSb[ ( RK[5] >> 16 ) & 0xFF ] <<  8 ) ^
-                ( (unsigned long) FSb[ ( RK[5] >> 24 ) & 0xFF ] << 16 ) ^
-                ( (unsigned long) FSb[ ( RK[5]       ) & 0xFF ] << 24 );
+            for (i = 0; i < 8; i++, RK += 6) {
+                RK[6] = RK[0] ^ RCON[i] ^
+                        ((unsigned long) FSb[ (RK[5] >> 8) & 0xFF ]) ^
+                        ((unsigned long) FSb[ (RK[5] >> 16) & 0xFF ] << 8) ^
+                        ((unsigned long) FSb[ (RK[5] >> 24) & 0xFF ] << 16) ^
+                        ((unsigned long) FSb[ (RK[5]) & 0xFF ] << 24);
 
-                RK[7]  = RK[1] ^ RK[6];
-                RK[8]  = RK[2] ^ RK[7];
-                RK[9]  = RK[3] ^ RK[8];
+                RK[7] = RK[1] ^ RK[6];
+                RK[8] = RK[2] ^ RK[7];
+                RK[9] = RK[3] ^ RK[8];
                 RK[10] = RK[4] ^ RK[9];
                 RK[11] = RK[5] ^ RK[10];
             }
@@ -379,23 +373,22 @@ int aes_setkey_enc( aes_context *ctx, const unsigned char *key, unsigned int key
 
         case 14:
 
-            for( i = 0; i < 7; i++, RK += 8 )
-            {
-                RK[8]  = RK[0] ^ RCON[i] ^
-                ( (unsigned long) FSb[ ( RK[7] >>  8 ) & 0xFF ]       ) ^
-                ( (unsigned long) FSb[ ( RK[7] >> 16 ) & 0xFF ] <<  8 ) ^
-                ( (unsigned long) FSb[ ( RK[7] >> 24 ) & 0xFF ] << 16 ) ^
-                ( (unsigned long) FSb[ ( RK[7]       ) & 0xFF ] << 24 );
+            for (i = 0; i < 7; i++, RK += 8) {
+                RK[8] = RK[0] ^ RCON[i] ^
+                        ((unsigned long) FSb[ (RK[7] >> 8) & 0xFF ]) ^
+                        ((unsigned long) FSb[ (RK[7] >> 16) & 0xFF ] << 8) ^
+                        ((unsigned long) FSb[ (RK[7] >> 24) & 0xFF ] << 16) ^
+                        ((unsigned long) FSb[ (RK[7]) & 0xFF ] << 24);
 
-                RK[9]  = RK[1] ^ RK[8];
+                RK[9] = RK[1] ^ RK[8];
                 RK[10] = RK[2] ^ RK[9];
                 RK[11] = RK[3] ^ RK[10];
 
                 RK[12] = RK[4] ^
-                ( (unsigned long) FSb[ ( RK[11]       ) & 0xFF ]       ) ^
-                ( (unsigned long) FSb[ ( RK[11] >>  8 ) & 0xFF ] <<  8 ) ^
-                ( (unsigned long) FSb[ ( RK[11] >> 16 ) & 0xFF ] << 16 ) ^
-                ( (unsigned long) FSb[ ( RK[11] >> 24 ) & 0xFF ] << 24 );
+                        ((unsigned long) FSb[ (RK[11]) & 0xFF ]) ^
+                        ((unsigned long) FSb[ (RK[11] >> 8) & 0xFF ] << 8) ^
+                        ((unsigned long) FSb[ (RK[11] >> 16) & 0xFF ] << 16) ^
+                        ((unsigned long) FSb[ (RK[11] >> 24) & 0xFF ] << 24);
 
                 RK[13] = RK[5] ^ RK[12];
                 RK[14] = RK[6] ^ RK[13];
@@ -408,33 +401,34 @@ int aes_setkey_enc( aes_context *ctx, const unsigned char *key, unsigned int key
             break;
     }
 
-    return( 0 );
+    return ( 0);
 }
 
 /*
  * AES key schedule (decryption)
  */
-int aes_setkey_dec( aes_context *ctx, const unsigned char *key, unsigned int keysize )
-{
+int aes_setkey_dec(aes_context *ctx, const unsigned char *key, unsigned int keysize) {
     int i, j;
     aes_context cty;
     unsigned long *RK;
     unsigned long *SK;
     int ret;
 
-    switch( keysize )
-    {
-        case 128: ctx->nr = 10; break;
-        case 192: ctx->nr = 12; break;
-        case 256: ctx->nr = 14; break;
-        default : return( POLARSSL_ERR_AES_INVALID_KEY_LENGTH );
+    switch (keysize) {
+        case 128: ctx->nr = 10;
+            break;
+        case 192: ctx->nr = 12;
+            break;
+        case 256: ctx->nr = 14;
+            break;
+        default: return ( POLARSSL_ERR_AES_INVALID_KEY_LENGTH);
     }
 
     ctx->rk = RK = ctx->buf;
 
-    ret = aes_setkey_enc( &cty, key, keysize );
-    if( ret != 0 )
-        return( ret );
+    ret = aes_setkey_enc(&cty, key, keysize);
+    if (ret != 0)
+        return ( ret);
 
     SK = cty.rk + cty.nr * 4;
 
@@ -443,14 +437,12 @@ int aes_setkey_dec( aes_context *ctx, const unsigned char *key, unsigned int key
     *RK++ = *SK++;
     *RK++ = *SK++;
 
-    for( i = ctx->nr - 1, SK -= 8; i > 0; i--, SK -= 8 )
-    {
-        for( j = 0; j < 4; j++, SK++ )
-        {
-            *RK++ = RT0[ FSb[ ( *SK       ) & 0xFF ] ] ^
-                    RT1[ FSb[ ( *SK >>  8 ) & 0xFF ] ] ^
-                    RT2[ FSb[ ( *SK >> 16 ) & 0xFF ] ] ^
-                    RT3[ FSb[ ( *SK >> 24 ) & 0xFF ] ];
+    for (i = ctx->nr - 1, SK -= 8; i > 0; i--, SK -= 8) {
+        for (j = 0; j < 4; j++, SK++) {
+            *RK++ = RT0[ FSb[ (*SK) & 0xFF ] ] ^
+                    RT1[ FSb[ (*SK >> 8) & 0xFF ] ] ^
+                    RT2[ FSb[ (*SK >> 16) & 0xFF ] ] ^
+                    RT3[ FSb[ (*SK >> 24) & 0xFF ] ];
         }
     }
 
@@ -459,9 +451,9 @@ int aes_setkey_dec( aes_context *ctx, const unsigned char *key, unsigned int key
     *RK++ = *SK++;
     *RK++ = *SK++;
 
-    memset( &cty, 0, sizeof( aes_context ) );
+    memset(&cty, 0, sizeof ( aes_context));
 
-    return( 0 );
+    return ( 0);
 }
 
 #define AES_FROUND(X0,X1,X2,X3,Y0,Y1,Y2,Y3)     \
@@ -513,183 +505,173 @@ int aes_setkey_dec( aes_context *ctx, const unsigned char *key, unsigned int key
 /*
  * AES-ECB block encryption/decryption
  */
-int aes_crypt_ecb( aes_context *ctx,
-                    int mode,
-                    const unsigned char input[16],
-                    unsigned char output[16] )
-{
+int aes_crypt_ecb(aes_context *ctx,
+        int mode,
+        const unsigned char input[16],
+        unsigned char output[16]) {
     int i;
     unsigned long *RK, X0, X1, X2, X3, Y0, Y1, Y2, Y3;
 
     RK = ctx->rk;
 
-    GET_ULONG_LE( X0, input,  0 ); X0 ^= *RK++;
-    GET_ULONG_LE( X1, input,  4 ); X1 ^= *RK++;
-    GET_ULONG_LE( X2, input,  8 ); X2 ^= *RK++;
-    GET_ULONG_LE( X3, input, 12 ); X3 ^= *RK++;
+    GET_ULONG_LE(X0, input, 0);
+    X0 ^= *RK++;
+    GET_ULONG_LE(X1, input, 4);
+    X1 ^= *RK++;
+    GET_ULONG_LE(X2, input, 8);
+    X2 ^= *RK++;
+    GET_ULONG_LE(X3, input, 12);
+    X3 ^= *RK++;
 
-    if( mode == AES_DECRYPT )
-    {
-        for( i = (ctx->nr >> 1) - 1; i > 0; i-- )
-        {
-            AES_RROUND( Y0, Y1, Y2, Y3, X0, X1, X2, X3 );
-            AES_RROUND( X0, X1, X2, X3, Y0, Y1, Y2, Y3 );
+    if (mode == AES_DECRYPT) {
+        for (i = (ctx->nr >> 1) - 1; i > 0; i--) {
+            AES_RROUND(Y0, Y1, Y2, Y3, X0, X1, X2, X3);
+            AES_RROUND(X0, X1, X2, X3, Y0, Y1, Y2, Y3);
         }
 
-        AES_RROUND( Y0, Y1, Y2, Y3, X0, X1, X2, X3 );
+        AES_RROUND(Y0, Y1, Y2, Y3, X0, X1, X2, X3);
 
         X0 = *RK++ ^ \
-                ( (unsigned long) RSb[ ( Y0       ) & 0xFF ]       ) ^
-                ( (unsigned long) RSb[ ( Y3 >>  8 ) & 0xFF ] <<  8 ) ^
-                ( (unsigned long) RSb[ ( Y2 >> 16 ) & 0xFF ] << 16 ) ^
-                ( (unsigned long) RSb[ ( Y1 >> 24 ) & 0xFF ] << 24 );
+                ((unsigned long) RSb[ (Y0) & 0xFF ]) ^
+                ((unsigned long) RSb[ (Y3 >> 8) & 0xFF ] << 8) ^
+                ((unsigned long) RSb[ (Y2 >> 16) & 0xFF ] << 16) ^
+                ((unsigned long) RSb[ (Y1 >> 24) & 0xFF ] << 24);
 
         X1 = *RK++ ^ \
-                ( (unsigned long) RSb[ ( Y1       ) & 0xFF ]       ) ^
-                ( (unsigned long) RSb[ ( Y0 >>  8 ) & 0xFF ] <<  8 ) ^
-                ( (unsigned long) RSb[ ( Y3 >> 16 ) & 0xFF ] << 16 ) ^
-                ( (unsigned long) RSb[ ( Y2 >> 24 ) & 0xFF ] << 24 );
+                ((unsigned long) RSb[ (Y1) & 0xFF ]) ^
+                ((unsigned long) RSb[ (Y0 >> 8) & 0xFF ] << 8) ^
+                ((unsigned long) RSb[ (Y3 >> 16) & 0xFF ] << 16) ^
+                ((unsigned long) RSb[ (Y2 >> 24) & 0xFF ] << 24);
 
         X2 = *RK++ ^ \
-                ( (unsigned long) RSb[ ( Y2       ) & 0xFF ]       ) ^
-                ( (unsigned long) RSb[ ( Y1 >>  8 ) & 0xFF ] <<  8 ) ^
-                ( (unsigned long) RSb[ ( Y0 >> 16 ) & 0xFF ] << 16 ) ^
-                ( (unsigned long) RSb[ ( Y3 >> 24 ) & 0xFF ] << 24 );
+                ((unsigned long) RSb[ (Y2) & 0xFF ]) ^
+                ((unsigned long) RSb[ (Y1 >> 8) & 0xFF ] << 8) ^
+                ((unsigned long) RSb[ (Y0 >> 16) & 0xFF ] << 16) ^
+                ((unsigned long) RSb[ (Y3 >> 24) & 0xFF ] << 24);
 
         X3 = *RK++ ^ \
-                ( (unsigned long) RSb[ ( Y3       ) & 0xFF ]       ) ^
-                ( (unsigned long) RSb[ ( Y2 >>  8 ) & 0xFF ] <<  8 ) ^
-                ( (unsigned long) RSb[ ( Y1 >> 16 ) & 0xFF ] << 16 ) ^
-                ( (unsigned long) RSb[ ( Y0 >> 24 ) & 0xFF ] << 24 );
-    }
-    else /* AES_ENCRYPT */
-    {
-        for( i = (ctx->nr >> 1) - 1; i > 0; i-- )
-        {
-            AES_FROUND( Y0, Y1, Y2, Y3, X0, X1, X2, X3 );
-            AES_FROUND( X0, X1, X2, X3, Y0, Y1, Y2, Y3 );
+                ((unsigned long) RSb[ (Y3) & 0xFF ]) ^
+                ((unsigned long) RSb[ (Y2 >> 8) & 0xFF ] << 8) ^
+                ((unsigned long) RSb[ (Y1 >> 16) & 0xFF ] << 16) ^
+                ((unsigned long) RSb[ (Y0 >> 24) & 0xFF ] << 24);
+    } else /* AES_ENCRYPT */ {
+        for (i = (ctx->nr >> 1) - 1; i > 0; i--) {
+            AES_FROUND(Y0, Y1, Y2, Y3, X0, X1, X2, X3);
+            AES_FROUND(X0, X1, X2, X3, Y0, Y1, Y2, Y3);
         }
 
-        AES_FROUND( Y0, Y1, Y2, Y3, X0, X1, X2, X3 );
+        AES_FROUND(Y0, Y1, Y2, Y3, X0, X1, X2, X3);
 
         X0 = *RK++ ^ \
-                ( (unsigned long) FSb[ ( Y0       ) & 0xFF ]       ) ^
-                ( (unsigned long) FSb[ ( Y1 >>  8 ) & 0xFF ] <<  8 ) ^
-                ( (unsigned long) FSb[ ( Y2 >> 16 ) & 0xFF ] << 16 ) ^
-                ( (unsigned long) FSb[ ( Y3 >> 24 ) & 0xFF ] << 24 );
+                ((unsigned long) FSb[ (Y0) & 0xFF ]) ^
+                ((unsigned long) FSb[ (Y1 >> 8) & 0xFF ] << 8) ^
+                ((unsigned long) FSb[ (Y2 >> 16) & 0xFF ] << 16) ^
+                ((unsigned long) FSb[ (Y3 >> 24) & 0xFF ] << 24);
 
         X1 = *RK++ ^ \
-                ( (unsigned long) FSb[ ( Y1       ) & 0xFF ]       ) ^
-                ( (unsigned long) FSb[ ( Y2 >>  8 ) & 0xFF ] <<  8 ) ^
-                ( (unsigned long) FSb[ ( Y3 >> 16 ) & 0xFF ] << 16 ) ^
-                ( (unsigned long) FSb[ ( Y0 >> 24 ) & 0xFF ] << 24 );
+                ((unsigned long) FSb[ (Y1) & 0xFF ]) ^
+                ((unsigned long) FSb[ (Y2 >> 8) & 0xFF ] << 8) ^
+                ((unsigned long) FSb[ (Y3 >> 16) & 0xFF ] << 16) ^
+                ((unsigned long) FSb[ (Y0 >> 24) & 0xFF ] << 24);
 
         X2 = *RK++ ^ \
-                ( (unsigned long) FSb[ ( Y2       ) & 0xFF ]       ) ^
-                ( (unsigned long) FSb[ ( Y3 >>  8 ) & 0xFF ] <<  8 ) ^
-                ( (unsigned long) FSb[ ( Y0 >> 16 ) & 0xFF ] << 16 ) ^
-                ( (unsigned long) FSb[ ( Y1 >> 24 ) & 0xFF ] << 24 );
+                ((unsigned long) FSb[ (Y2) & 0xFF ]) ^
+                ((unsigned long) FSb[ (Y3 >> 8) & 0xFF ] << 8) ^
+                ((unsigned long) FSb[ (Y0 >> 16) & 0xFF ] << 16) ^
+                ((unsigned long) FSb[ (Y1 >> 24) & 0xFF ] << 24);
 
         X3 = *RK++ ^ \
-                ( (unsigned long) FSb[ ( Y3       ) & 0xFF ]       ) ^
-                ( (unsigned long) FSb[ ( Y0 >>  8 ) & 0xFF ] <<  8 ) ^
-                ( (unsigned long) FSb[ ( Y1 >> 16 ) & 0xFF ] << 16 ) ^
-                ( (unsigned long) FSb[ ( Y2 >> 24 ) & 0xFF ] << 24 );
+                ((unsigned long) FSb[ (Y3) & 0xFF ]) ^
+                ((unsigned long) FSb[ (Y0 >> 8) & 0xFF ] << 8) ^
+                ((unsigned long) FSb[ (Y1 >> 16) & 0xFF ] << 16) ^
+                ((unsigned long) FSb[ (Y2 >> 24) & 0xFF ] << 24);
     }
 
-    PUT_ULONG_LE( X0, output,  0 );
-    PUT_ULONG_LE( X1, output,  4 );
-    PUT_ULONG_LE( X2, output,  8 );
-    PUT_ULONG_LE( X3, output, 12 );
+    PUT_ULONG_LE(X0, output, 0);
+    PUT_ULONG_LE(X1, output, 4);
+    PUT_ULONG_LE(X2, output, 8);
+    PUT_ULONG_LE(X3, output, 12);
 
-    return( 0 );
+    return ( 0);
 }
 
 /*
  * AES-CBC buffer encryption/decryption
  */
-int aes_crypt_cbc( aes_context *ctx,
-                    int mode,
-                    size_t length,
-                    unsigned char iv[16],
-                    const unsigned char *input,
-                    unsigned char *output )
-{
+int aes_crypt_cbc(aes_context *ctx,
+        int mode,
+        size_t length,
+        unsigned char iv[16],
+        const unsigned char *input,
+        unsigned char *output) {
     int i;
     unsigned char temp[16];
 
-    if( length % 16 )
-        return( POLARSSL_ERR_AES_INVALID_INPUT_LENGTH );
+    if (length % 16)
+        return ( POLARSSL_ERR_AES_INVALID_INPUT_LENGTH);
 
-    if( mode == AES_DECRYPT )
-    {
-        while( length > 0 )
-        {
-            memcpy( temp, input, 16 );
-            aes_crypt_ecb( ctx, mode, input, output );
+    if (mode == AES_DECRYPT) {
+        while (length > 0) {
+            memcpy(temp, input, 16);
+            aes_crypt_ecb(ctx, mode, input, output);
 
-            for( i = 0; i < 16; i++ )
-                output[i] = (unsigned char)( output[i] ^ iv[i] );
+            for (i = 0; i < 16; i++)
+                output[i] = (unsigned char) (output[i] ^ iv[i]);
 
-            memcpy( iv, temp, 16 );
+            memcpy(iv, temp, 16);
 
-            input  += 16;
+            input += 16;
             output += 16;
             length -= 16;
         }
-    }
-    else
-    {
-        while( length > 0 )
-        {
-            for( i = 0; i < 16; i++ )
-                output[i] = (unsigned char)( input[i] ^ iv[i] );
+    } else {
+        while (length > 0) {
+            for (i = 0; i < 16; i++)
+                output[i] = (unsigned char) (input[i] ^ iv[i]);
 
-            aes_crypt_ecb( ctx, mode, output, output );
-            memcpy( iv, output, 16 );
+            aes_crypt_ecb(ctx, mode, output, output);
+            memcpy(iv, output, 16);
 
-            input  += 16;
+            input += 16;
             output += 16;
             length -= 16;
         }
     }
 
-    return( 0 );
+    return ( 0);
 }
 
 /*
  * AES-CTR buffer encryption/decryption
  */
-int aes_crypt_ctr( aes_context *ctx,
-                       size_t length,
-                       size_t *nc_off,
-                       unsigned char nonce_counter[16],
-                       unsigned char stream_block[16],
-                       const unsigned char *input,
-                       unsigned char *output )
-{
+int aes_crypt_ctr(aes_context *ctx,
+        size_t length,
+        size_t *nc_off,
+        unsigned char nonce_counter[16],
+        unsigned char stream_block[16],
+        const unsigned char *input,
+        unsigned char *output) {
     int c, i, cb;
     size_t n = *nc_off;
 
-    while( length-- )
-    {
-        if( n == 0 ) {
-            aes_crypt_ecb( ctx, AES_ENCRYPT, nonce_counter, stream_block );
+    while (length--) {
+        if (n == 0) {
+            aes_crypt_ecb(ctx, AES_ENCRYPT, nonce_counter, stream_block);
 
             i = 15;
             do {
-               nonce_counter[i]++;
-               cb = nonce_counter[i] == 0;
-            } while( i-- && cb );
+                nonce_counter[i]++;
+                cb = nonce_counter[i] == 0;
+            } while (i-- && cb);
 
         }
         c = *input++;
-        *output++ = (unsigned char)( c ^ stream_block[n] );
+        *output++ = (unsigned char) (c ^ stream_block[n]);
 
         n = (n + 1) & 0x0F;
     }
 
     *nc_off = n;
 
-    return( 0 );
+    return ( 0);
 }

@@ -296,7 +296,7 @@ void eid2_generate_block(s8 *file_in, u32 blocktype, s8 *file_out) {
                     free(block);
                     break;
             }
-            
+
         }
 
         free(eid2);

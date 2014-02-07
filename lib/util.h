@@ -1,7 +1,7 @@
 /*
-* Copyright (c) 2011-2012 by ps3dev.net
-* This file is released under the GPLv2.
-*/
+ * Copyright (c) 2011-2012 by ps3dev.net
+ * This file is released under the GPLv2.
+ */
 
 #ifndef _UTIL_H_
 #define _UTIL_H_

@@ -1,7 +1,7 @@
 /*
-* Copyright (c) 2011-2012 by ps3dev.net
-* This file is released under the GPLv2.
-*/
+ * Copyright (c) 2011-2012 by ps3dev.net
+ * This file is released under the GPLv2.
+ */
 
 #ifndef _INDIV_H_
 #define _INDIV_H_
@@ -34,13 +34,13 @@
 #define INDIV_EID4_KEY_OFFSET 0x20
 
 /*!
-* \brief Generate individuals.
-* \param indiv Individuals dest.
-* \param seed0 Seed chunk 0.
-* \param seed1 Seed chunk 1.
-* \param seed2 Seed chunk 2.
-* \param seed3 Seed chunk 3.
-*/
+ * \brief Generate individuals.
+ * \param indiv Individuals dest.
+ * \param seed0 Seed chunk 0.
+ * \param seed1 Seed chunk 1.
+ * \param seed2 Seed chunk 2.
+ * \param seed3 Seed chunk 3.
+ */
 void indiv_gen(u8 *seed0, u8 *seed1, u8 *seed2, u8 *seed3, u8 *indiv);
 
 #endif
