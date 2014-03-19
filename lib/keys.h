@@ -42,7 +42,14 @@
 extern u8 *eid_root_key;
 
 /*! Syscon key seed. */
+
 extern u8 syscon_key_seed[INDIV_SIZE];
+
+extern u8 keyseed_for_srk2[0x10];
+
+extern u8 sherwood_ss_seed[INDIV_SEED_SIZE];
+
+extern u8 ss_seed_one_more[INDIV_SEED_SIZE];
 
 /*! Common individuals seed. */
 extern u8 common_indiv_seed[INDIV_SEED_SIZE];

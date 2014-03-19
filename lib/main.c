@@ -14,6 +14,7 @@
 #include "kgen.h"
 #include "types.h"
 #include "indiv.h"
+#include "aes_xts.h"
 
 void generate_hdd_individuals() {
     u8 ata_k1[0x20], ata_k2[0x20], edec_k1[0x20], edec_k2[0x20];
@@ -84,9 +85,34 @@ void syscon_auth() {
     _write_buffer((s8*) "syscon/enc_key_seed", enc_key_seed, INDIV_SIZE);
 }
 
+void gen_vtrm(){
+	//fetching root_key
+    eid_root_key = _read_buffer((s8*) "data/eid_root_key", NULL);
+	
+	aes_context aes_ctxt;
+    u8 iv[0x10];
+	u8 indiv[0x40];
+	u8 key[0x10];
+	u8 block_key[0x10];
+	u8 block_iv[0x10]={0x0};
+	
+	
+	indiv_gen(eid1_indiv_seed, NULL, NULL, NULL, indiv);
+	
+    //Generate VTRM Block Key.
+	memcpy(key, indiv + 0x20, 0x10);
+    aes_setkey_enc(&aes_ctxt, key, KEY_BITS(0x10));
+    memcpy(iv, indiv + 0x10, 0x10);
+    aes_crypt_cbc(&aes_ctxt, AES_ENCRYPT, 0x10, iv, keyseed_for_srk2, block_key);
+	
+	_hexdump(stdout, "Block Key:    ", 0, block_key, 0x10, 0);
+	_hexdump(stdout, "Block Iv:    ", 0, block_iv, 0x10, 0);
+	
+}
+
 int main() {
     int i;
-    printf("Select an option\n1-Decrypt eEID(missing eid5)\n2-Encrypt EID0 Section A\n3-Generate Syscon AUTH seeds(Acording to wiki)\n4-Generate HDD Keys\n0-Exit\n");
+    printf("Select an option\n1-Decrypt eEID(missing eid5)\n2-Encrypt EID0 Section A\n3-Generate Syscon AUTH seeds(Acording to wiki)\n4-Generate HDD Keys\n5-Generate VTRM Keys\n0-Exit\n");
     scanf("%d", &i);
     switch (i) {
         case 1:
@@ -100,6 +126,9 @@ int main() {
             break;
         case 4:
             generate_hdd_individuals();
+            break;
+		case 5:
+            gen_vtrm();
             break;
         case 0:
             break;
