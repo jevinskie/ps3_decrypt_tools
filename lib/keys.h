@@ -47,6 +47,10 @@ extern u8 syscon_key_seed[INDIV_SIZE];
 
 extern u8 keyseed_for_srk2[0x10];
 
+extern u8 seed_for_backup[0x10];
+
+extern u8 unknown_seed[INDIV_SEED_SIZE];
+
 extern u8 sherwood_ss_seed[INDIV_SEED_SIZE];
 
 extern u8 ss_seed_one_more[INDIV_SEED_SIZE];

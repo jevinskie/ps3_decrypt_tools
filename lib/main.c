@@ -110,9 +110,34 @@ void gen_vtrm(){
 	
 }
 
+void gen_backup(){
+	//fetching root_key
+    eid_root_key = _read_buffer((s8*) "data/eid_root_key", NULL);
+	
+	aes_context aes_ctxt;
+    u8 iv[0x10];
+	u8 indiv[0x40];
+	u8 key[0x10];
+	u8 backup_key[0x10];
+	u8 backup_iv[0x10]={0x0};
+	
+	
+	indiv_gen(eid1_indiv_seed, NULL, NULL, NULL, indiv);
+	
+    //Generate Backup Key.
+	memcpy(key, indiv + 0x20, 0x10);
+    aes_setkey_enc(&aes_ctxt, key, KEY_BITS(0x10));
+    memcpy(iv, indiv + 0x10, 0x10);
+    aes_crypt_cbc(&aes_ctxt, AES_ENCRYPT, 0x10, iv, seed_for_backup, backup_key);
+	
+	_hexdump(stdout, "Backup Key:    ", 0, backup_key, 0x10, 0);
+	_hexdump(stdout, "Backup Iv:    ", 0, backup_iv, 0x10, 0);
+	
+}
+
 int main() {
     int i;
-    printf("Select an option\n1-Decrypt eEID(missing eid5)\n2-Encrypt EID0 Section A\n3-Generate Syscon AUTH seeds(Acording to wiki)\n4-Generate HDD Keys\n5-Generate VTRM Keys\n0-Exit\n");
+    printf("Select an option\n1-Decrypt eEID(missing eid5)\n2-Encrypt EID0 Section A\n3-Generate Syscon AUTH seeds(Acording to wiki)\n4-Generate HDD Keys\n5-Generate VTRM Keys\n6-Generate Backup Keys\n0-Exit\n");
     scanf("%d", &i);
     switch (i) {
         case 1:
@@ -130,6 +155,8 @@ int main() {
 		case 5:
             gen_vtrm();
             break;
+		case 6:
+            gen_backup();
         case 0:
             break;
         default:
