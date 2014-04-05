@@ -119,7 +119,6 @@ void gen_backup(){
 	u8 indiv[0x40];
 	u8 key[0x10];
 	u8 backup_key[0x10];
-	u8 backup_iv[0x10]={0x0};
 	
 	
 	indiv_gen(eid1_indiv_seed, NULL, NULL, NULL, indiv);
@@ -129,9 +128,10 @@ void gen_backup(){
     aes_setkey_enc(&aes_ctxt, key, KEY_BITS(0x10));
     memcpy(iv, indiv + 0x10, 0x10);
     aes_crypt_cbc(&aes_ctxt, AES_ENCRYPT, 0x10, iv, seed_for_backup, backup_key);
+	memcpy(iv, indiv + 0x10, 0x10);
 	
 	_hexdump(stdout, "Backup Key:    ", 0, backup_key, 0x10, 0);
-	_hexdump(stdout, "Backup Iv:    ", 0, backup_iv, 0x10, 0);
+	_hexdump(stdout, "Backup Iv:    ", 0, iv, 0x10, 0);
 	
 }
 
@@ -142,21 +142,27 @@ int main() {
     switch (i) {
         case 1:
             decrypt_eid();
+			getchar();
             break;
         case 2:
             encrypt_eid0_section_A();
+			getchar();
             break;
         case 3:
             syscon_auth();
+			getchar();
             break;
         case 4:
             generate_hdd_individuals();
+			getchar();
             break;
 		case 5:
             gen_vtrm();
+			getchar();
             break;
 		case 6:
             gen_backup();
+			getchar();
         case 0:
             break;
         default:
