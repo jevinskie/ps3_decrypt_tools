@@ -96,13 +96,22 @@ void eid0_decrypt_section(u8 *eid0_in, u8 *section_out, int i) {
     //Decrypt section 0 of eid0.
     aes_setkey_dec(&aes_ctxt, key, 0x80);
     aes_crypt_cbc(&aes_ctxt, AES_DECRYPT, 0xC0, indiv + INDIV_EID0_SEC_0_IV_OFFSET, eid0_in + 0x20 + 0xC0 * i, section_out);
-
+	
     //Calculate aes omac1.
     u8 digest[AES_OMAC1_DIGEST_SIZE];
     aes_omac1(digest, section_out, 0xA8, key, 0x80);
 
-    if (memcmp(digest, section_out + 0xA8, AES_OMAC1_DIGEST_SIZE) != 0)
-        printf("warning: eid0 section 0 hash check failed!\n");
+    if (memcmp(digest, section_out + 0xA8, AES_OMAC1_DIGEST_SIZE) != 0){
+		if (i == 0) {
+			printf("warning: eid0 section 0 hash check failed!\n");
+		} else if (i == 6) {
+			printf("warning: eid0 section 6 hash check failed!\n");
+		} else if (i == 10) {
+			printf("warning: eid0 section A hash check failed!\n");
+		}
+		
+	}
+		
 }
 
 void eid0_hash_encrypt_section_0(u8 *section_in, u8 *section_out) {
@@ -114,7 +123,7 @@ void eid0_hash_encrypt_section_0(u8 *section_in, u8 *section_out) {
     indiv_gen(eid0_indiv_seed, NULL, NULL, NULL, indiv);
 
     //Generate key.
-    aes_setkey_enc(&aes_ctxt, indiv + INDIV_EID0_SEC_0_GENKEY_OFFSET, 0x100);
+	aes_setkey_enc(&aes_ctxt, indiv + INDIV_EID0_SEC_0_GENKEY_OFFSET, 0x100);
     aes_crypt_ecb(&aes_ctxt, AES_ENCRYPT, eid0_keyseed_0, key);
 
     //Calculate aes omac1.
@@ -123,6 +132,26 @@ void eid0_hash_encrypt_section_0(u8 *section_in, u8 *section_out) {
     //Encrypt section 0 of eid0.
     aes_setkey_enc(&aes_ctxt, key, 0x80);
     aes_crypt_cbc(&aes_ctxt, AES_ENCRYPT, 0xC0, indiv + INDIV_EID0_SEC_0_IV_OFFSET, section_in, section_out);
+}
+
+void eid0_hash_encrypt_section_6(u8 *section_in, u8 *section_out) {
+    u8 indiv[INDIV_SIZE];
+    u8 key[0x10];
+    aes_context aes_ctxt;
+
+    //Generate individuals.
+    indiv_gen(eid0_indiv_seed, NULL, NULL, NULL, indiv);
+
+    //Generate key.
+    aes_setkey_enc(&aes_ctxt, indiv + INDIV_EID0_SEC_6_GENKEY_OFFSET, 0x100);
+    aes_crypt_ecb(&aes_ctxt, AES_ENCRYPT, eid0_keyseed_6, key);
+
+    //Calculate aes omac1.
+    aes_omac1(section_in + 0xA8, section_in, 0xA8, key, 0x80);
+
+    //Encrypt section 0 of eid0.
+    aes_setkey_enc(&aes_ctxt, key, 0x80);
+    aes_crypt_cbc(&aes_ctxt, AES_ENCRYPT, 0xC0, indiv + INDIV_EID0_SEC_6_IV_OFFSET, section_in, section_out);
 }
 
 void eid0_hash_encrypt_section_A(u8 *section_in, u8 *section_out) {
@@ -175,9 +204,47 @@ void eid0_decrypt(s8 *file_in, s8 *file_out) {
     }
 }
 
+void eid0_encrypt_section_0(s8 *file_in, s8 *file_out) {
+    s8 fname_0_in[128];
+    sprintf(fname_0_in, "%s.bin", file_in);
+
+    u32 length;
+    u8 *section_0_decrypted = _read_buffer(fname_0_in, &length);
+
+    if (section_0_decrypted != NULL) {
+        u8 section_0[EID0_SECTION_0_SIZE];
+        eid0_hash_encrypt_section_0(section_0_decrypted, section_0);
+
+        s8 fname_0[128];
+        sprintf(fname_0, "%s.bin", file_out);
+        _write_buffer(fname_0, section_0, 0xC0);
+
+        free(section_0_decrypted);
+    }
+}
+
+void eid0_encrypt_section_6(s8 *file_in, s8 *file_out) {
+    s8 fname_6_in[128];
+    sprintf(fname_6_in, "%s.bin", file_in);
+
+    u32 length;
+    u8 *section_6_decrypted = _read_buffer(fname_6_in, &length);
+
+    if (section_6_decrypted != NULL) {
+        u8 section_6[EID0_SECTION_6_SIZE];
+        eid0_hash_encrypt_section_6(section_6_decrypted, section_6);
+
+        s8 fname_6[128];
+        sprintf(fname_6, "%s.bin", file_out);
+        _write_buffer(fname_6, section_6, 0xC0);
+
+        free(section_6_decrypted);
+    }
+}
+
 void eid0_encrypt_section_A(s8 *file_in, s8 *file_out) {
     s8 fname_A_in[128];
-    sprintf(fname_A_in, "%s.section_A", file_in);
+    sprintf(fname_A_in, "%s.bin", file_in);
 
     u32 length;
     u8 *section_A_decrypted = _read_buffer(fname_A_in, &length);
@@ -187,7 +254,7 @@ void eid0_encrypt_section_A(s8 *file_in, s8 *file_out) {
         eid0_hash_encrypt_section_A(section_A_decrypted, section_A);
 
         s8 fname_A[128];
-        sprintf(fname_A, "%s.section_A", file_out);
+        sprintf(fname_A, "%s.bin", file_out);
         _write_buffer(fname_A, section_A, 0xC0);
 
         free(section_A_decrypted);

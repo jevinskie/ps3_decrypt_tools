@@ -13,6 +13,11 @@
 /*! EID0 section 0 keygen key offset. */
 #define INDIV_EID0_SEC_0_GENKEY_OFFSET 0x20
 
+/*! EID0 section 6 iv offset. */
+#define INDIV_EID0_SEC_6_IV_OFFSET 0x10
+/*! EID0 section 6 keygen key offset. */
+#define INDIV_EID0_SEC_6_GENKEY_OFFSET 0x20
+
 /*! EID0 section A iv offset. */
 #define INDIV_EID0_SEC_A_IV_OFFSET 0x10
 /*! EID0 section A keygen key offset. */

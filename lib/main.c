@@ -56,12 +56,28 @@ void decrypt_eid() {
     eid4_decrypt((s8*) "eid/eid4", (s8*) "eid/eid4decrypted.bin");
 }
 
+void encrypt_eid0_section_0() {
+    //fetching root_key
+    eid_root_key = _read_buffer((s8*) "data/eid_root_key", NULL);
+
+    //encrypting
+    eid0_encrypt_section_0((s8*) "eid/eid0decrypted.section_0", (s8*) "eid/eid0encrypted.section_0");
+}
+
+void encrypt_eid0_section_6() {
+    //fetching root_key
+    eid_root_key = _read_buffer((s8*) "data/eid_root_key", NULL);
+
+    //encrypting
+    eid0_encrypt_section_6((s8*) "eid/eid0decrypted.section_6", (s8*) "eid/eid0encrypted.section_6");
+}
+
 void encrypt_eid0_section_A() {
     //fetching root_key
     eid_root_key = _read_buffer((s8*) "data/eid_root_key", NULL);
 
     //encrypting
-    eid0_encrypt_section_A((s8*) "eid/eid0decrypted", (s8*) "eid/eid0encrypted");
+    eid0_encrypt_section_A((s8*) "eid/eid0decrypted.section_A", (s8*) "eid/eid0encrypted.section_A");
 }
 
 void syscon_auth() {
@@ -137,7 +153,7 @@ void gen_backup(){
 
 int main() {
     int i;
-    printf("Select an option\n1-Decrypt eEID(missing eid5)\n2-Encrypt EID0 Section A\n3-Generate Syscon AUTH seeds(Acording to wiki)\n4-Generate HDD Keys\n5-Generate VTRM Keys\n6-Generate Backup Keys\n0-Exit\n");
+    printf("Select an option\n1-Decrypt eEID(missing eid5)\n2-Encrypt All eEID0 sections \n3-Generate Syscon AUTH seeds(Acording to wiki)\n4-Generate HDD Keys\n5-Generate VTRM Keys\n6-Generate Backup Keys\n0-Exit\n");
     scanf("%d", &i);
     switch (i) {
         case 1:
@@ -145,8 +161,10 @@ int main() {
 			getchar();
             break;
         case 2:
+			encrypt_eid0_section_0();
+			encrypt_eid0_section_6();
             encrypt_eid0_section_A();
-			getchar();
+			//getchar();
             break;
         case 3:
             syscon_auth();

@@ -11,6 +11,8 @@
 /*! Sizes. */
 /*! Size of EID0 section 0. */
 #define EID0_SECTION_0_SIZE 0xC0
+/*! Size of EID0 section 6. */
+#define EID0_SECTION_6_SIZE 0xC0
 /*! Size of EID0 section A. */
 #define EID0_SECTION_A_SIZE 0xC0
 /*! Size of EID3. */
@@ -122,7 +124,14 @@ void eid0_decrypt_section(u8 *eid0_in, u8 *section_out, int i);
 void eid0_hash_encrypt_section_0(u8 *section_in, u8 *section_out);
 
 /*!
- * \brief Hash and encrypt section 0 of EID0.
+ * \brief Hash and encrypt section 6 of EID0.
+ * \param section_in Input section.
+ * \param section_out Output section.
+ */
+void eid0_hash_encrypt_section_6(u8 *section_in, u8 *section_out);
+
+/*!
+ * \brief Hash and encrypt section A of EID0.
  * \param section_in Input section.
  * \param section_out Output section.
  */
@@ -136,7 +145,21 @@ void eid0_hash_encrypt_section_A(u8 *section_in, u8 *section_out);
 void eid0_decrypt(s8 *file_in, s8 *file_out);
 
 /*!
- * \brief Decrypt EID0.
+ * \brief Encrypt EID0.
+ * \param file_in Input EID0.
+ * \param file_out Prefix for decrypted EID0 sections.
+ */
+void eid0_encrypt_section_0(s8 *file_in, s8 *file_out);
+
+/*!
+ * \brief Encrypt EID0.
+ * \param file_in Input EID0.
+ * \param file_out Prefix for decrypted EID0 sections.
+ */
+void eid0_encrypt_section_6(s8 *file_in, s8 *file_out);
+
+/*!
+ * \brief Encrypt EID0.
  * \param file_in Input EID0.
  * \param file_out Prefix for decrypted EID0 sections.
  */
