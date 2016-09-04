@@ -77,7 +77,12 @@ u8 *eid_get_entry(s8 *file, u64 entnum) {
 void eid0_decrypt_section(u8 *eid0_in, u8 *section_out, int i) {
     u8 indiv[INDIV_SIZE];
     u8 key[0x10];
+	u8 key_priv[0x10];
+	u8 zero_iv[0x10];
+	memset (key_priv,0,0x10);
+	memset (zero_iv,0,0x10);
     aes_context aes_ctxt;
+	//aes_context aes_ctxt2;
 
     //Generate individuals.
     indiv_gen(eid0_indiv_seed, NULL, NULL, NULL, indiv);
@@ -89,6 +94,10 @@ void eid0_decrypt_section(u8 *eid0_in, u8 *section_out, int i) {
     } else if (i == 6) {
         aes_setkey_enc(&aes_ctxt, indiv + INDIV_EID0_SEC_0_GENKEY_OFFSET, 0x100);
         aes_crypt_ecb(&aes_ctxt, AES_ENCRYPT, eid0_keyseed_6, key);
+		/*
+		aes_setkey_enc(&aes_ctxt2, indiv + INDIV_EID0_SEC_0_GENKEY_OFFSET, 0x100);
+        aes_crypt_ecb(&aes_ctxt2, AES_ENCRYPT, eid0_keyseed_6_priv, key_priv);
+		*/
     } else if (i == 10) {
         aes_setkey_enc(&aes_ctxt, indiv + INDIV_EID0_SEC_0_GENKEY_OFFSET, 0x100);
         aes_crypt_ecb(&aes_ctxt, AES_ENCRYPT, eid0_keyseed_A, key);
@@ -111,7 +120,23 @@ void eid0_decrypt_section(u8 *eid0_in, u8 *section_out, int i) {
 		}
 		
 	}
+	
+	/*
+	if (i == 6) {
+		//Decrypt section 0 of eid0.
+		aes_setkey_dec(&aes_ctxt2, key_priv, 0x80);
+		aes_crypt_cbc(&aes_ctxt2, AES_DECRYPT, 0x20, zero_iv, section_out + 0x88, section_out + 0x88);
 		
+		memset (zero_iv, 0, 0x10);
+		
+		if (memcmp(section_out + 0x9C, zero_iv, 0xC) != 0){
+			printf("Failure with padding on section 6 priv key area!\n");
+		}
+		else{
+			_hexdump(stdout, "Section 6:", 0x88, section_out + 0x88 , 0x20, TRUE);
+		}
+	}
+	*/
 }
 
 void eid0_hash_encrypt_section_0(u8 *section_in, u8 *section_out) {

@@ -72,6 +72,8 @@ extern u8 eid4_indiv_seed[INDIV_SEED_SIZE];
 extern u8 eid0_keyseed_0[EID0_KEYSEED_SIZE];
 /*! EID0 keyseed version 6. */
 extern u8 eid0_keyseed_6[EID0_KEYSEED_SIZE];
+/*! EID0 keyseed version 6 encrypted private key. */
+extern u8 eid0_keyseed_6_priv[EID0_KEYSEED_SIZE];
 /*! EID0 keyseed version A. */
 extern u8 eid0_keyseed_A[EID0_KEYSEED_SIZE];
 
