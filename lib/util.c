@@ -4,7 +4,11 @@
  */
 
 #include <stdio.h>
+#ifdef _WIN32
 #include <malloc.h>
+#else
+#include <stdlib.h>
+#endif
 #include <string.h>
 #include "types.h"
 
